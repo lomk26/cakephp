@@ -1431,10 +1431,10 @@ class QueryTest extends TestCase
 
         $this->assertCount(2, $result);
         $first = $result->fetch('assoc');
-        $this->assertEquals(5, $first['id']);
+        $this->assertSame('5', $first['id']);
 
         $second = $result->fetch('assoc');
-        $this->assertEquals(6, $second['id']);
+        $this->assertSame('6', $second['id']);
         $result->closeCursor();
     }
 
@@ -1461,10 +1461,10 @@ class QueryTest extends TestCase
 
         $this->assertCount(2, $result);
         $first = $result->fetch('assoc');
-        $this->assertEquals(4, $first['id']);
+        $this->assertSame('4', $first['id']);
 
         $second = $result->fetch('assoc');
-        $this->assertEquals(5, $second['id']);
+        $this->assertSame('5', $second['id']);
         $result->closeCursor();
     }
 
@@ -1490,10 +1490,10 @@ class QueryTest extends TestCase
 
         $this->assertCount(2, $result);
         $first = $result->fetch('assoc');
-        $this->assertEquals(5, $first['id']);
+        $this->assertSame('5', $first['id']);
 
         $second = $result->fetch('assoc');
-        $this->assertEquals(6, $second['id']);
+        $this->assertSame('6', $second['id']);
         $result->closeCursor();
     }
 
@@ -1520,10 +1520,10 @@ class QueryTest extends TestCase
 
         $this->assertCount(2, $result);
         $first = $result->fetch('assoc');
-        $this->assertEquals(4, $first['id']);
+        $this->assertSame('4', $first['id']);
 
         $second = $result->fetch('assoc');
-        $this->assertEquals(5, $second['id']);
+        $this->assertSame('5', $second['id']);
         $result->closeCursor();
     }
 
@@ -2424,17 +2424,17 @@ class QueryTest extends TestCase
 
         $query = new Query($this->connection);
         $query->select('id')->from('comments')->page(3, 10);
-        $this->assertEquals(10, $query->clause('limit'));
-        $this->assertEquals(20, $query->clause('offset'));
+        $this->assertSame(10, $query->clause('limit'));
+        $this->assertSame(20, $query->clause('offset'));
 
         $query = new Query($this->connection);
         $query->select('id')->from('comments')->page(1);
-        $this->assertEquals(25, $query->clause('limit'));
-        $this->assertEquals(0, $query->clause('offset'));
+        $this->assertSame(25, $query->clause('limit'));
+        $this->assertSame(0, $query->clause('offset'));
 
         $query->select('id')->from('comments')->page(2);
-        $this->assertEquals(25, $query->clause('limit'));
-        $this->assertEquals(25, $query->clause('offset'));
+        $this->assertSame(25, $query->clause('limit'));
+        $this->assertSame(25, $query->clause('offset'));
     }
 
     /**
@@ -3640,7 +3640,7 @@ class QueryTest extends TestCase
             ->select(['d' => $query->func()->dateDiff(['2012-01-05', '2012-01-02'])])
             ->execute()
             ->fetchAll('assoc');
-        $this->assertEquals(3, abs((int)$result[0]['d']));
+        $this->assertSame(3, abs((int)$result[0]['d']));
 
         $query = new Query($this->connection);
         $result = $query
@@ -4255,7 +4255,7 @@ class QueryTest extends TestCase
             ->where(['id' => 1])
             ->rowCountAndClose();
 
-        $this->assertEquals(500, $rowCount);
+        $this->assertSame(500, $rowCount);
     }
 
     /**
@@ -4301,8 +4301,8 @@ class QueryTest extends TestCase
             ->execute()
             ->fetchAll('assoc');
 
-        $this->assertEquals(5, $results[0]['published']);
-        $this->assertEquals(1, $results[0]['not_published']);
+        $this->assertSame('5', $results[0]['published']);
+        $this->assertSame('1', $results[0]['not_published']);
 
         $query = new Query($this->connection);
         $query

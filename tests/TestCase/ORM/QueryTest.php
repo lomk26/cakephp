@@ -294,7 +294,7 @@ class QueryTest extends TestCase
             ->toArray();
         $expected[0]['articles'] = [];
         $this->assertEquals($expected, $results);
-        $this->assertEquals($table->getAssociation('articles')->getStrategy(), $strategy);
+        $this->assertSame($table->getAssociation('articles')->getStrategy(), $strategy);
     }
 
     /**
@@ -322,11 +322,11 @@ class QueryTest extends TestCase
 
         $results = $query->enableHydration(false)
             ->count();
-        $this->assertEquals($expected, $results);
+        $this->assertSame($expected, $results);
 
         $results = $query->enableHydration(true)
             ->count();
-        $this->assertEquals($expected, $results);
+        $this->assertSame($expected, $results);
     }
 
     /**
@@ -678,7 +678,7 @@ class QueryTest extends TestCase
             ],
         ];
         $this->assertEquals($expected, $results);
-        $this->assertEquals($table->getAssociation('Tags')->getStrategy(), $strategy);
+        $this->assertSame($table->getAssociation('Tags')->getStrategy(), $strategy);
     }
 
     /**
@@ -893,7 +893,7 @@ class QueryTest extends TestCase
         $firstCount = $query->count();
         $firstResults = $query->toList();
 
-        $this->assertEquals(3, $firstCount);
+        $this->assertSame(3, $firstCount);
         $this->assertCount(3, $firstResults);
 
         $article->delete(reset($firstResults));
@@ -904,7 +904,7 @@ class QueryTest extends TestCase
         $secondCount = $query->count();
         $secondResults = $query->toList();
 
-        $this->assertEquals(2, $secondCount);
+        $this->assertSame(2, $secondCount);
         $this->assertCount(2, $secondResults);
     }
 
@@ -957,7 +957,7 @@ class QueryTest extends TestCase
         $result = $query->clause('where');
         $this->assertEquals($expected, $result);
 
-        $this->assertEquals(1, $query->clause('limit'));
+        $this->assertSame(1, $query->clause('limit'));
 
         $expected = new QueryExpression(['a > b'], $typeMap);
         $result = $query->clause('join');
@@ -968,7 +968,7 @@ class QueryTest extends TestCase
         $expected = new OrderByExpression(['a' => 'ASC']);
         $this->assertEquals($expected, $query->clause('order'));
 
-        $this->assertEquals(5, $query->clause('offset'));
+        $this->assertSame(5, $query->clause('offset'));
         $this->assertEquals(['field_a'], $query->clause('group'));
 
         $expected = new QueryExpression($options['having'], $typeMap);
@@ -991,8 +991,8 @@ class QueryTest extends TestCase
             'limit' => 5,
         ];
         $query->applyOptions($opts);
-        $this->assertEquals(5, $query->clause('limit'));
-        $this->assertEquals(10, $query->clause('offset'));
+        $this->assertSame(5, $query->clause('limit'));
+        $this->assertSame(10, $query->clause('offset'));
     }
 
     /**
@@ -1154,7 +1154,7 @@ class QueryTest extends TestCase
         $query = new Query($this->connection, $table);
         $result = $query->select(['id'])->enableHydration(false)->first();
         $this->assertEquals(['id' => 1], $result);
-        $this->assertEquals(1, $query->clause('limit'));
+        $this->assertSame(1, $query->clause('limit'));
         $result = $query->select(['id'])->first();
         $this->assertEquals(['id' => 1], $result);
     }
@@ -1172,7 +1172,7 @@ class QueryTest extends TestCase
 
         $first = $query->enableHydration(false)->first();
         $this->assertEquals(['id' => 1], $first);
-        $this->assertEquals(1, $query->clause('limit'));
+        $this->assertSame(1, $query->clause('limit'));
     }
 
     /**
@@ -1213,7 +1213,7 @@ class QueryTest extends TestCase
             ->mapReduce($map, $reduce);
 
         $first = $query->first();
-        $this->assertEquals(1, $first);
+        $this->assertSame(1, $first);
     }
 
     /**
@@ -1250,8 +1250,8 @@ class QueryTest extends TestCase
         }
 
         $first = $results[0];
-        $this->assertEquals(1, $first->id);
-        $this->assertEquals(1, $first->author_id);
+        $this->assertSame(1, $first->id);
+        $this->assertSame(1, $first->author_id);
         $this->assertSame('First Article', $first->title);
         $this->assertSame('First Article Body', $first->body);
         $this->assertSame('Y', $first->published);
@@ -1489,8 +1489,8 @@ class QueryTest extends TestCase
         }
 
         $first = $results[0];
-        $this->assertEquals(1, $first->id);
-        $this->assertEquals(1, $first->author_id);
+        $this->assertSame(1, $first->id);
+        $this->assertSame(1, $first->author_id);
         $this->assertSame('First Article', $first->title);
         $this->assertSame('First Article Body', $first->body);
         $this->assertSame('Y', $first->published);
@@ -1581,7 +1581,7 @@ class QueryTest extends TestCase
 
         $result = $query->all();
         $this->assertCount(1, $result);
-        $this->assertEquals(2, $result->first()->id);
+        $this->assertSame(2, $result->first()->id);
     }
 
     /**
@@ -1653,7 +1653,7 @@ class QueryTest extends TestCase
         ]);
         $query->where(['id' => 1]);
         $this->assertCount(1, $query->all());
-        $this->assertEquals(1, $query->count());
+        $this->assertSame(1, $query->count());
     }
 
     /**
@@ -1711,7 +1711,7 @@ class QueryTest extends TestCase
         $query->select(['author_id', 's' => $query->func()->sum('id')])
             ->group(['author_id']);
         $result = $query->count();
-        $this->assertEquals(2, $result);
+        $this->assertSame(2, $result);
     }
 
     /**
@@ -1735,7 +1735,7 @@ class QueryTest extends TestCase
             });
 
         $result = $query->count();
-        $this->assertEquals(1, $result);
+        $this->assertSame(1, $result);
     }
 
     /**
@@ -1817,9 +1817,9 @@ class QueryTest extends TestCase
         $this->assertInstanceOf('Cake\Database\StatementInterface', $result);
         //PDO_SQLSRV returns -1 for successful inserts when using INSERT ... OUTPUT
         if (!$this->connection->getDriver() instanceof \Cake\Database\Driver\Sqlserver) {
-            $this->assertEquals(2, $result->rowCount());
+            $this->assertSame(2, $result->rowCount());
         } else {
-            $this->assertEquals(-1, $result->rowCount());
+            $this->assertSame(-1, $result->rowCount());
         }
     }
 
@@ -2162,8 +2162,8 @@ class QueryTest extends TestCase
                 ],
             ]);
         $result = $query->toArray();
-        $this->assertEquals(1, $result[0]->article->id);
-        $this->assertEquals(1, $result[1]->article->id);
+        $this->assertSame(1, $result[0]->article->id);
+        $this->assertSame(1, $result[1]->article->id);
 
         $articles = $this->getTableLocator()->get('Articles');
         $articles->belongsTo('Authors');
@@ -2178,7 +2178,7 @@ class QueryTest extends TestCase
                 ],
             ]);
         $result = $query->toArray();
-        $this->assertEquals(1, $result[0]->author->id);
+        $this->assertSame(1, $result[0]->author->id);
     }
 
     /**
@@ -2288,7 +2288,7 @@ class QueryTest extends TestCase
 
         $results = $query->all();
         $this->assertCount(2, $results);
-        $this->assertEquals(3, $query->count());
+        $this->assertSame(3, $query->count());
     }
 
     /**
@@ -2864,7 +2864,7 @@ class QueryTest extends TestCase
             ->enableAutoFields()
             ->count();
 
-        $this->assertEquals(3, $result);
+        $this->assertSame(3, $result);
     }
 
     /**
@@ -2983,7 +2983,7 @@ class QueryTest extends TestCase
             ]);
 
         $this->assertEmpty($resultWithoutAuthor->first()['author']);
-        $this->assertEquals($authorId, $resultWithAuthor->first()['author']['id']);
+        $this->assertSame($authorId, $resultWithAuthor->first()['author']['id']);
     }
 
     /**
@@ -3105,8 +3105,8 @@ class QueryTest extends TestCase
             return $exp->add('author_id = :author');
         });
         $query->bind(':author', 1, 'integer');
-        $this->assertEquals(1, $query->count());
-        $this->assertEquals(3, $query->first()->id);
+        $this->assertSame(1, $query->count());
+        $this->assertSame(3, $query->first()->id);
     }
 
     /**
@@ -3129,7 +3129,7 @@ class QueryTest extends TestCase
             ])
             ->toArray();
         $this->assertCount(1, $articles);
-        $this->assertEquals(3, $articles[0]->author->id);
+        $this->assertSame(3, $articles[0]->author->id);
     }
 
     /**
@@ -3155,7 +3155,7 @@ class QueryTest extends TestCase
             ])
             ->toArray();
         $this->assertCount(3, $articles);
-        $this->assertEquals(3, $articles[1]->author->id);
+        $this->assertSame(3, $articles[1]->author->id);
 
         $this->assertNull($articles[0]->author);
         $this->assertNull($articles[2]->author);
@@ -3182,9 +3182,9 @@ class QueryTest extends TestCase
             ->contain('articles')
             ->first();
 
-        $this->assertEquals(1, $result->id);
+        $this->assertSame(1, $result->id);
         $this->assertCount(2, $result->articles);
-        $this->assertEquals(2, $result->_matchingData['tags']->id);
+        $this->assertSame(2, $result->_matchingData['tags']->id);
     }
 
     /**
@@ -3205,9 +3205,9 @@ class QueryTest extends TestCase
             ->contain('tags')
             ->first();
 
-        $this->assertEquals(1, $result->id);
+        $this->assertSame(1, $result->id);
         $this->assertCount(2, $result->tags);
-        $this->assertEquals(2, $result->_matchingData['tags']->id);
+        $this->assertSame(2, $result->_matchingData['tags']->id);
     }
 
     /**

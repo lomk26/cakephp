@@ -126,7 +126,7 @@ class WindowQueryTests extends TestCase
             ->order(['article_id'])
             ->execute()
             ->fetchAll('assoc');
-        $this->assertEquals(4, $result[0]['num_rows']);
+        $this->assertSame(4, $result[0]['num_rows']);
 
         $query = new Query($this->connection);
         $result = $query
@@ -135,9 +135,9 @@ class WindowQueryTests extends TestCase
             ->order(['updated'])
             ->execute()
             ->fetchAll('assoc');
-        $this->assertEquals(1, $result[0]['num_rows']);
-        $this->assertEquals(4, $result[3]['num_rows']);
-        $this->assertEquals(1, $result[4]['num_rows']);
+        $this->assertSame('1', $result[0]['num_rows']);
+        $this->assertSame('4', $result[3]['num_rows']);
+        $this->assertSame('1', $result[4]['num_rows']);
     }
 
     /**
@@ -163,7 +163,7 @@ class WindowQueryTests extends TestCase
             ->order(['article_id'])
             ->execute()
             ->fetchAll('assoc');
-        $this->assertEquals(4, $result[0]['num_rows']);
+        $this->assertSame('4', $result[0]['num_rows']);
     }
 
     public function testWindowChaining()
@@ -189,6 +189,6 @@ class WindowQueryTests extends TestCase
             ->order(['article_id'])
             ->execute()
             ->fetchAll('assoc');
-        $this->assertEquals(4, $result[0]['num_rows']);
+        $this->assertSame('4', $result[0]['num_rows']);
     }
 }
